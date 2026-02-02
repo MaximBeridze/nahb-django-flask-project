@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Statistics</h1>
+  <p class="muted">These stats come from the Django DB (Plays). Story titles are fetched from Flask when possible.</p>
+
+  <div class="card">
+    <h2>Plays per story</h2>
+    <table>
+      <thead><tr><th>Story</th><th>Total plays</th></tr></thead>
+      <tbody>
+        {% for r in per_story %}
+          <tr><td>{{ r.title }} (id={{ r.story_id }})</td><td>{{ r.total }}</td></tr>
+        {% empty %}
+          <tr><td class="muted" colspan="2">No plays yet — go play a story 😄</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Endings reached</h2>
+    <table>
+      <thead><tr><th>Story</th><th>Ending page</th><th>Times reached</th></tr></thead>
+      <tbody>
+        {% for r in endings %}
+          <tr>
+            <td>{{ r.title }} (id={{ r.story_id }})</td>
+            <td>page {{ r.ending_page_id }}</td>
+            <td>{{ r.total }}</td>
+          </tr>
+        {% empty %}
+          <tr><td class="muted" colspan="3">No endings yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

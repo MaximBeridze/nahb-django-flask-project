@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="card">
+    <h1 style="margin:0 0 10px 0;">Page #{{ page.id }}</h1>
+    <div class="page-text">{{ page.text }}</div>
+  </div>
+
+  <h2>Choices</h2>
+  {% for c in choices %}
+    <a class="choice" href="{% url 'play_page' story_id=story_id page_id=c.next_page_id %}">
+      {{ c.text }}
+    </a>
+  {% empty %}
+    <div class="card">
+      <p class="muted">No choices found for this page.</p>
+    </div>
+  {% endfor %}
+{% endblock %}

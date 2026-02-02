@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NAHB Demo</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; background: #0b0f17; color: #e8eefc; }
+    a { color: #9cc2ff; text-decoration: none; }
+    .nav { padding: 14px 18px; background: #0f1624; border-bottom: 1px solid #20314e; display:flex; gap:16px; align-items:center; }
+    .nav a { font-weight: 600; }
+    .wrap { max-width: 900px; margin: 0 auto; padding: 18px; }
+    .card { background: #0f1624; border: 1px solid #20314e; border-radius: 14px; padding: 16px; margin: 12px 0; }
+    .muted { color: #a8b4cc; }
+    .btn { display:inline-block; padding: 10px 12px; border-radius: 12px; background: #1a2b4a; border: 1px solid #2b446f; color: #e8eefc; font-weight: 600; }
+    .btn:hover { filter: brightness(1.15); }
+    .btn-row { display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
+    .choice { display:block; padding: 12px 14px; border-radius: 12px; background: #12203a; border: 1px solid #20314e; margin: 10px 0; }
+    .choice:hover { filter: brightness(1.2); }
+    .page-text { font-size: 18px; line-height: 1.5; }
+    table { width:100%; border-collapse: collapse; }
+    th, td { padding: 10px; border-bottom: 1px solid #20314e; text-align:left; }
+  </style>
+</head>
+<body>
+  <div class="nav">
+    <a href="/">Stories</a>
+    <a href="/stats/">Stats</a>
+  </div>
+  <div class="wrap">
+    {% block content %}{% endblock %}
+  </div>
+</body>
+</html>
