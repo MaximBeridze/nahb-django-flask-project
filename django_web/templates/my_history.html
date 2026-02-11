@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>My play history</h1>
+<table class="table">
+  <tr><th>Date</th><th>Story</th><th>Ending</th><th>Score</th><th>Path</th></tr>
+  {% for p in plays %}
+    <tr>
+      <td>{{ p.created_at }}</td>
+      <td>#{{ p.story_id }}</td>
+      <td>{{ p.ending_label }}</td>
+      <td>{{ p.score }}</td>
+      <td><a class="btn small ghost" href="{% url 'play_path' p.id %}">View</a></td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="5" class="muted">No plays yet.</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

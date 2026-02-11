@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Statistics</h1>
+  <p class="muted">{{ scope }}</p>
+
+  <h3>Plays per story</h3>
+  <table class="table">
+    <tr><th>Story ID</th><th>Plays</th></tr>
+    {% for r in plays_per_story %}
+      <tr><td>{{ r.story_id }}</td><td>{{ r.count }}</td></tr>
+    {% empty %}
+      <tr><td colspan="2">No plays yet.</td></tr>
+    {% endfor %}
+  </table>
+
+  <h3>Ending distribution</h3>
+  <table class="table">
+    <tr><th>Story ID</th><th>Ending</th><th>Count</th></tr>
+    {% for r in endings %}
+      <tr><td>{{ r.story_id }}</td><td>{{ r.ending_label|default:"(no label)" }}</td><td>{{ r.count }}</td></tr>
+    {% empty %}
+      <tr><td colspan="3">No endings yet.</td></tr>
+    {% endfor %}
+  </table>
+{% endblock %}

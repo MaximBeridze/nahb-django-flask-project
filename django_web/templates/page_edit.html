@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Edit page #{{ page.id }}</h1>
+
+<form method="post" class="form">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button class="btn">Save</button>
+</form>
+
+<div class="row">
+  <a class="btn ghost" href="{% url 'story_edit' page.story_id %}">Back</a>
+</div>
+{% endblock %}

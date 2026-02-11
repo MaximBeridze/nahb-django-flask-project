@@ -1,11 +1,14 @@
-from pathlib import Path
 import os
+from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = "demo-secret-key-change-me"
-DEBUG = True
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-dev")
+DEBUG = os.getenv("DEBUG", "1") == "1"
+ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -14,7 +17,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "game",
+    "nahb_web.game.apps.GameConfig",
 ]
 
 MIDDLEWARE = [
@@ -50,11 +53,11 @@ WSGI_APPLICATION = "nahb_web.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "django_web.sqlite",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 
-AUTH_PASSWORD_VALIDATORS = []  # demo
+AUTH_PASSWORD_VALIDATORS = []
 
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "Europe/Paris"
@@ -63,8 +66,12 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
-
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Flask API base URL
-FLASK_API_BASE_URL = os.environ.get("FLASK_API_BASE_URL", "http://127.0.0.1:5001")
+# Flask API config
+FLASK_API_BASE = os.getenv("FLASK_API_BASE", "http://localhost:5001").rstrip("/")
+FLASK_API_KEY = os.getenv("FLASK_API_KEY", "")
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'story_list'
+LOGOUT_REDIRECT_URL = 'story_list'

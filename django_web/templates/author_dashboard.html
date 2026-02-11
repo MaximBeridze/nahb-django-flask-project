@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Author dashboard</h1>
+  <div class="row">
+    <a class="btn" href="{% url 'story_create' %}">New story</a>
+  </div>
+
+  <table class="table">
+    <tr><th>ID</th><th>Title</th><th>Status</th><th>Start page</th><th>Actions</th></tr>
+    {% for s in stories %}
+      <tr>
+        <td>{{ s.id }}</td>
+        <td>{{ s.title }}</td>
+        <td>{{ s.status }}</td>
+        <td>{{ s.start_page_id }}</td>
+        <td>
+          <a class="btn small" href="{% url 'story_edit' s.id %}">Edit</a>
+          <form method="post" action="{% url 'story_delete' s.id %}" style="display:inline">
+            {% csrf_token %}
+            <button class="btn small danger" onclick="return confirm('Delete story?')">Delete</button>
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+  </table>
+{% endblock %}

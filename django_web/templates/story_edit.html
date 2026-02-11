@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Edit story #{{ story.id }}</h1>
+
+  <form method="post" class="form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn">Save</button>
+  </form>
+
+  <hr/>
+  <h3>Pages</h3>
+  <p class="muted">
+    Tip: you can add an illustration URL to stories/pages. Choices can include score tags like <code>(+1)</code> or <code>(-1)</code>.
+    Optional dice-gated choices: include <code>[roll>=4]</code> inside the choice text.
+  </p>
+  <div class="row">
+    <a class="btn secondary" href="{% url 'page_create' story.id %}">Add page</a>
+    <a class="btn ghost" href="{% url 'story_graph' story.id %}">Graph</a>
+    <a class="btn" href="{% url 'play_start' story.id %}">Play</a>
+    <form class="inline" method="post" action="{% url 'story_delete' story.id %}">{% csrf_token %}<button class="btn danger">Delete story</button></form>
+  </div>
+
+  <div class="grid">
+    {% for p in pages %}
+      <div class="card">
+        <h4>Page #{{ p.id }} {% if p.is_ending %}<span class="pill">ENDING</span>{% endif %}</h4>
+        {% if p.ending_label %}<p class="muted">Label: {{ p.ending_label }}</p>{% endif %}
+        <p class="muted">Choices: {{ p.choices|length }}</p>
+        <div class="row">
+          <a class="btn" href="{% url 'page_edit' p.id %}">Edit</a>
+          <form class="inline" method="post" action="{% url 'page_delete' p.id %}">{% csrf_token %}<button class="btn danger">Delete</button></form>
+          <a class="btn secondary" href="{% url 'choice_create' p.id %}">Add choice</a>
+        </div>
+        {% if p.choices %}
+          <ul class="smalllist">
+            {% for c in p.choices %}
+              <li>
+                <span class="muted">#{{ c.id }}</span> {{ c.text }} → {{ c.next_page_id }}
+                <form class="inline" method="post" action="{% url 'choice_delete' c.id story.id %}">{% csrf_token %}<button class="linkbtn danger">delete</button></form>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Play path: {{ story.title }}</h1>
+<p class="muted">Ending: {{ play.ending_label }} | Score: {{ play.score }}</p>
+
+<div id="graph" style="height: 70vh; border: 1px solid #ddd; border-radius: 12px;"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/vis-network@9.1.9/dist/vis-network.min.js"></script>
+<script>
+  const rawNodes = {{ nodes_json|safe }};
+  const rawEdges = {{ edges_json|safe }};
+  const path = {{ path_json|safe }};
+  const inPath = new Set(path);
+
+  const nodes = new vis.DataSet(rawNodes.map(n => ({
+    id: n.id,
+    label: n.label,
+    color: inPath.has(n.id) ? '#ffe7a3' : undefined
+  })));
+
+  const edges = new vis.DataSet(rawEdges.map(e => ({
+    from: e.from, to: e.to, arrows: 'to',
+    color: (inPath.has(e.from) && inPath.has(e.to)) ? '#f59e0b' : undefined
+  })));
+
+  const container = document.getElementById('graph');
+  const data = { nodes, edges };
+  const options = {
+    edges: { smooth: true },
+    nodes: { shape: 'box', margin: 10 },
+    physics: { stabilization: true }
+  };
+  new vis.Network(container, data, options);
+</script>
+{% endblock %}

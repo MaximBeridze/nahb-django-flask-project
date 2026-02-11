@@ -1,97 +1,233 @@
-# NAHB Demo (Bare Minimum) — Flask API + Django Web
+# 📖 NAHB --- Not Another Hero's Book
 
-This is a **tiny, runnable demo** of the NAHB architecture:
+## Project Presentation
 
-- **Flask**: REST API storing story content (SQLite)
-- **Django**: Web UI + gameplay tracking (SQLite) that **consumes the Flask API**
+**NAHB (Not Another Hero's Book)** is an interactive storytelling web
+platform inspired by *Choose Your Own Adventure* narratives.\
+The application allows authors to design branching storylines composed
+of scenes and player choices, while readers can play through stories and
+reach multiple possible endings based on their decisions.
 
-It implements enough to **create/play** a small story and see **basic stats**.
+The project uses a service-oriented architecture separating narrative
+content management from gameplay and user interaction systems.
 
----
+------------------------------------------------------------------------
 
-## 0) Prerequisites
+## Concept
 
-- Python 3.10+ recommended
-- Two terminals
+The platform supports two main user experiences:
 
----
+### Authors
 
-## 1) Run Flask API
+-   Create and manage interactive stories\
+-   Build narrative trees using pages and choices\
+-   Control story visibility (draft / published / suspended)
 
-### Install
-```bash
-cd flask_api
-python -m venv .venv
-source .venv/bin/activate  # (Windows: .venv\Scripts\activate)
-pip install -r requirements.txt
-```
+### Players
 
-### Start
-```bash
-python app.py
-```
+-   Browse available stories\
+-   Play through branching narratives\
+-   Reach multiple endings\
+-   Rate and comment on stories\
+-   Report inappropriate content
 
-Flask starts on: `http://127.0.0.1:5001`
+------------------------------------------------------------------------
 
-On first launch, it creates `flask_api.sqlite` and **seeds** a demo story.
+## System Architecture
 
----
+The project is composed of two independent applications communicating
+through a REST API.
 
-## 2) Run Django Web
+### Flask --- Narrative Content Service
 
-### Install
-```bash
-cd django_web
-python -m venv .venv
-source .venv/bin/activate  # (Windows: .venv\Scripts\activate)
-pip install -r requirements.txt
-```
+Responsible for storing and managing: - Stories\
+- Pages (scenes)\
+- Choices (transitions)
 
-### Configure API URL (optional)
-By default it uses:
-- `FLASK_API_BASE_URL=http://127.0.0.1:5001`
+Exposes a JSON REST API consumed by the Django application.
 
-You can override with an env var:
-```bash
-export FLASK_API_BASE_URL="http://127.0.0.1:5001"
-```
+------------------------------------------------------------------------
 
-### Migrate & start
-```bash
-python manage.py migrate
-python manage.py runserver
-```
+### Django --- Gameplay & User Platform
 
-Open: `http://127.0.0.1:8000`
+Responsible for: - User interface and templates\
+- Gameplay engine\
+- User authentication and roles\
+- Play session tracking\
+- Statistics and analytics\
+- Community features (ratings, comments, reports)
 
----
+------------------------------------------------------------------------
 
-## 3) What to click
+## Data Separation
 
-- **Stories**: `/` — list published stories (from Flask)
-- **Play**: click a story then "Play"
-- **Stats**: `/stats/` — shows plays per story + endings reached (from Django DB)
+  Category            Managed By
+  ------------------- ------------
+  Narrative Content   Flask
+  Gameplay Data       Django
+  User Accounts       Django
+  Community Data      Django
 
----
+------------------------------------------------------------------------
 
-## 4) Minimal API Contract Implemented
+## Core Features
 
-### Read
-- `GET /stories?status=published`
-- `GET /stories/<id>`
-- `GET /stories/<id>/start`
-- `GET /pages/<id>`
+### Interactive Story Engine
 
-### Write (Level 10: open)
-- `POST /stories`
-- `PUT /stories/<id>`
-- `DELETE /stories/<id>`
-- `POST /stories/<id>/pages`
-- `POST /pages/<id>/choices`
+-   Branching story navigation\
+-   Multiple endings\
+-   Named endings\
+-   Choice-based progression
 
----
+### Gameplay Tracking
 
-## 5) Notes
+-   Play history tracking\
+-   Ending distribution statistics\
+-   Player path visualization\
+-   Anonymous and authenticated play support
 
-- This is **not** production-ready; it’s only meant to show the expected **look/feel** and architecture.
-- Level 16 security (API key + auth) is intentionally not included.
+### Author Tools
+
+-   Story creation and editing\
+-   Page and choice management\
+-   Draft / Published workflow\
+-   Story moderation system
+
+### Security & Permissions
+
+-   Authentication system\
+-   Role-based access control\
+-   Story ownership enforcement\
+-   API key protection for content modification
+
+### Community Features
+
+-   Story rating system (1--5 stars)\
+-   Comment system\
+-   Reporting system for moderation
+
+------------------------------------------------------------------------
+
+## Advanced Features
+
+### Visualization
+
+-   Story tree graph visualization\
+-   Player decision path visualization
+
+### Narrative Enhancements
+
+-   Story illustrations support\
+-   Random event / dice logic support\
+-   Immersive narrative design
+
+------------------------------------------------------------------------
+
+## Stories
+
+**SCP-6767 --- The King In Yellow**
+
+Possible endings: - Containment Ending\
+- Death Ending\
+- King Ending
+
+------------------------------------------------------------------------
+
+## Technologies Used
+
+### Backend
+
+-   Python\
+-   Django\
+-   Flask\
+-   SQLAlchemy
+
+### Database
+
+-   SQLite
+
+### Frontend
+
+-   Django Templates\
+-   HTML / CSS / JavaScript
+
+### Communication
+
+-   REST API (JSON)
+
+------------------------------------------------------------------------
+
+## How To Setup
+
+### Clone Repository
+
+    git clone <repository-url>
+    cd NAHB_project
+
+### Setup Flask API
+
+    cd flask_api
+    python -m venv .venv
+    .venv\Scripts\activate   (Windows)
+    source .venv/bin/activate  (Mac/Linux)
+
+    pip install -r requirements.txt
+    python app.py
+
+Flask API runs on:
+
+    http://127.0.0.1:5001
+
+### Setup Django Web App
+
+    cd ../django_web
+    python -m venv .venv
+    .venv\Scripts\activate
+
+    pip install -r requirements.txt
+    python manage.py migrate
+    python manage.py createsuperuser
+    python manage.py runserver 8000
+
+Django runs on:
+
+    http://127.0.0.1:8000
+
+------------------------------------------------------------------------
+
+## Flask API Endpoints
+
+### Reading
+
+    GET /stories?status=published
+    GET /stories/<id>
+    GET /stories/<id>/start
+    GET /pages/<id>
+
+### Writing
+
+    POST /stories
+    PUT /stories/<id>
+    DELETE /stories/<id>
+    POST /stories/<id>/pages
+    POST /pages/<id>/choices
+
+Write endpoints require:
+
+    X-API-KEY: <secret>
+
+------------------------------------------------------------------------
+
+## Security
+
+Implemented protections: - CSRF protection (Django)\
+- API Key validation (Flask write endpoints)\
+- Role-based permissions\
+- Story ownership enforcement
+
+------------------------------------------------------------------------
+
+## Academic Context
+
+Developed as part of a web architecture and backend systems module
+focusing on multi-service application design and REST API integration.

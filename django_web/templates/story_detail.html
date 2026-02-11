@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>{{ story.title }}</h1>
+  <p class="muted">{{ story.description }}</p>
+
+  {% if story.illustration_url %}
+    <img class="hero" src="{{ story.illustration_url }}" alt="illustration"/>
+  {% endif %}
+
+  <p class="muted">
+    {% if rating_count %}
+      ⭐ {{ rating_avg|floatformat:1 }} ({{ rating_count }})
+    {% else %}
+      No ratings yet
+    {% endif %}
+  </p>
+
+  <div class="row">
+    <a class="btn" href="{% url 'play_start' story.id %}">Start</a>
+    <a class="btn secondary" href="{% url 'play_resume' story.id %}">Resume</a>
+    <a class="btn ghost" href="{% url 'story_graph' story.id %}">Story graph</a>
+  </div>
+
+  {% if user.is_authenticated %}
+    <div class="row">
+      <a class="btn" href="{% url 'rate_story' story.id %}">{% if my_rating %}Edit rating{% else %}Rate{% endif %}</a>
+      <a class="btn danger" href="{% url 'report_story' story.id %}">Report</a>
+    </div>
+  {% else %}
+    <p class="muted">Login to rate or report.</p>
+  {% endif %}
+{% endblock %}

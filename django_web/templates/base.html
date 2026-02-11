@@ -1,34 +1,38 @@
 <!doctype html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>NAHB Demo</title>
-  <style>
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; background: #0b0f17; color: #e8eefc; }
-    a { color: #9cc2ff; text-decoration: none; }
-    .nav { padding: 14px 18px; background: #0f1624; border-bottom: 1px solid #20314e; display:flex; gap:16px; align-items:center; }
-    .nav a { font-weight: 600; }
-    .wrap { max-width: 900px; margin: 0 auto; padding: 18px; }
-    .card { background: #0f1624; border: 1px solid #20314e; border-radius: 14px; padding: 16px; margin: 12px 0; }
-    .muted { color: #a8b4cc; }
-    .btn { display:inline-block; padding: 10px 12px; border-radius: 12px; background: #1a2b4a; border: 1px solid #2b446f; color: #e8eefc; font-weight: 600; }
-    .btn:hover { filter: brightness(1.15); }
-    .btn-row { display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
-    .choice { display:block; padding: 12px 14px; border-radius: 12px; background: #12203a; border: 1px solid #20314e; margin: 10px 0; }
-    .choice:hover { filter: brightness(1.2); }
-    .page-text { font-size: 18px; line-height: 1.5; }
-    table { width:100%; border-collapse: collapse; }
-    th, td { padding: 10px; border-bottom: 1px solid #20314e; text-align:left; }
-  </style>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>NAHB</title>
+  <link rel="stylesheet" href="/static/app.css"/>
 </head>
 <body>
-  <div class="nav">
-    <a href="/">Stories</a>
-    <a href="/stats/">Stats</a>
-  </div>
-  <div class="wrap">
+  <header class="topbar">
+    <div class="container">
+      <div class="brand"><a href="{% url 'story_list' %}">NAHB</a></div>
+      <nav class="nav">
+        <a href="{% url 'story_list' %}">Stories</a>
+        <a href="{% url 'stats' %}">Stats</a>
+        <a href="{% url 'story_list' %}#about">About</a>
+        {% if user.is_authenticated %}
+          <a href="{% url 'my_history' %}">My history</a>
+          <a href="{% url 'author_dashboard' %}">Author</a>
+          {% if user.is_staff %}
+            <a href="{% url 'moderation' %}">Moderation</a>
+          {% endif %}
+          <form class="inline" method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="linkbtn">Logout ({{ user.username }})</button></form>
+        {% else %}
+          <a href="{% url 'login' %}">Login</a>
+          <a href="{% url 'register' %}">Register</a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+  <main class="container">
+    {% if messages %}
+      <ul class="messages">{% for m in messages %}<li>{{ m }}</li>{% endfor %}</ul>
+    {% endif %}
     {% block content %}{% endblock %}
-  </div>
+  </main>
 </body>
 </html>

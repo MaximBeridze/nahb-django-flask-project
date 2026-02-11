@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Story graph: {{ story.title }}</h1>
+<div class="row">
+  <a class="btn ghost" href="{% url 'story_detail' story.id %}">Back</a>
+</div>
+
+<div id="graph" style="height: 70vh; border: 1px solid #ddd; border-radius: 12px;"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/vis-network@9.1.9/dist/vis-network.min.js"></script>
+<script>
+  const nodes = new vis.DataSet({{ nodes_json|safe }});
+  const edges = new vis.DataSet({{ edges_json|safe }});
+  const container = document.getElementById('graph');
+  const data = { nodes, edges };
+  const options = {
+    layout: { hierarchical: false },
+    edges: { arrows: 'to', smooth: true, font: { align: 'middle' } },
+    nodes: { shape: 'box', margin: 10, font: { multi: 'html' } },
+    physics: { stabilization: true }
+  };
+  new vis.Network(container, data, options);
+</script>
+{% endblock %}
