@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Rate: {{ story.title }}</h1>
+<form method="post" class="form">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button class="btn">Save</button>
+</form>
+{% endblock %}

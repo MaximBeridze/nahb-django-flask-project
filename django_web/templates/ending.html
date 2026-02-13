@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>{{ page.ending_label|default:"Ending" }}</h2>
+  <div class="pill">Final score: {{ score }}</div>
+
+  <div class="card">
+    {% if page.illustration_url %}
+      <img class="hero" src="{{ page.illustration_url }}" alt="illustration"/>
+    {% endif %}
+    <pre class="storytext">{{ page.text }}</pre>
+  </div>
+
+  <div class="row">
+    <a class="btn" href="{% url 'play_start' story_id %}">Play again</a>
+    <a class="btn secondary" href="{% url 'stats' %}">Stats</a>
+    <a class="btn ghost" href="{% url 'story_detail' story_id %}">Story page</a>
+  </div>
+{% endblock %}

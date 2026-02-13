@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Published stories</h1>
+
+  <form method="get" class="row">
+    <input name="q" placeholder="Search..." value="{{ q }}"/>
+    <button>Search</button>
+  </form>
+
+  <div class="grid">
+    {% for s in stories %}
+      <div class="card"> 
+        {% if s.id == 1 %}
+      <img class="thumb" src="https://weirdhousepress.com/cdn/shop/files/KingInYellowartwork.jpg?v=1727020464&width=823">
+    {% elif s.id == 2 %}
+      <img class="thumb" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCl9GKxVpDTUMGWek0kb-ULuvqnHBBJOmvkA&s">
+    {% endif %}
+        <h3>{{ s.title }}</h3>
+        <p class="muted">{{ s.description }}</p>
+        <p class="muted">
+          {% if s.rating_count %}
+            ⭐ {{ s.rating_avg|floatformat:1 }} ({{ s.rating_count }})
+          {% else %}
+            No ratings yet
+          {% endif %}
+        </p>
+        <div class="row">
+          <a class="btn" href="{% url 'story_detail' s.id %}">Open</a>
+          <a class="btn secondary" href="{% url 'play_start' s.id %}">Play</a>
+          <a class="btn ghost" href="{% url 'story_graph' s.id %}">Graph</a>
+        </div>
+      </div>
+    {% empty %}
+      <p>No stories.</p>
+    {% endfor %}
+  </div>
+{% endblock %}

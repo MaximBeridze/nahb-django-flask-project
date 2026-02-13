@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>New choice for page #{{ page.id }}</h1>
+  <p class="muted">Tip: put score hints in the choice text like <code>(+1)</code> or <code>(-1)</code>.</p>
+  <form method="post" class="form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn">Create choice</button>
+  </form>
+{% endblock %}

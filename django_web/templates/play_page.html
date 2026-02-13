@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Story #{{ story_id }}</h2>
+  <div class="row">
+    <div class="pill">Score: {{ score }}</div>
+    {% if needs_roll %}
+      <div class="pill">Dice: {% if last_roll %}{{ last_roll }}{% else %}not rolled{% endif %}</div>
+    {% endif %}
+  </div>
+
+  <div class="card">
+    {% if page.illustration_url %}
+      <img class="hero" src="{{ page.illustration_url }}" alt="illustration"/>
+    {% endif %}
+    <pre class="storytext">{{ page.text }}</pre>
+  </div>
+
+  {% if needs_roll and not last_roll %}
+    <form method="post" class="row">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="roll"/>
+      <button class="btn secondary">Roll dice</button>
+    </form>
+    <p class="muted">Some choices may be locked until you roll.</p>
+  {% endif %}
+
+  <form method="post" class="choices" id="choices-form">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="choose"/>
+    {# choice_id is written here by JS before submit so disabling the button does not drop the value #}
+    <input type="hidden" name="choice_id" id="choice-id-input" value=""/>
+    {% for c in choices %}
+      <button type="button" class="choice" data-choice-id="{{ c.id }}">{{ c.text }}</button>
+    {% empty %}
+      <p class="muted">No available choices (try rolling).</p>
+    {% endfor %}
+  </form>
+
+  <script>
+    (function () {
+      var form = document.getElementById('choices-form');
+      if (!form) return;
+      var hiddenInput = document.getElementById('choice-id-input');
+      var submitted = false;
+
+      form.querySelectorAll('button.choice').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          if (submitted) return;       // ignore every click after the first
+
+          submitted = true;
+
+          // Write choice value into the hidden input BEFORE submitting
+          hiddenInput.value = btn.getAttribute('data-choice-id');
+
+          // Visually lock all buttons so the player sees immediate feedback
+          form.querySelectorAll('button.choice').forEach(function (b) {
+            b.disabled = true;
+            b.style.opacity = '0.5';
+            b.style.cursor = 'not-allowed';
+          });
+
+          form.submit();
+        });
+      });
+    })();
+  </script>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Report: {{ story.title }}</h1>
+<p class="muted">Explain what's wrong (spam, offensive content, broken story, etc.).</p>
+<form method="post" class="form">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button class="btn danger">Submit report</button>
+</form>
+{% endblock %}
